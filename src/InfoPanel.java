@@ -1,4 +1,6 @@
+import java.awt.*;
+import javax.swing.*;
 
-public class InfoPanel {
+public class InfoPanel extends JPanel{
 
 }

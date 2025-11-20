@@ -1,4 +1,6 @@
+import java.awt.*;
+import javax.swing.*;
 
-public class StartPanel {
+public class StartPanel extends JPanel{
 
 }
