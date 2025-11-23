@@ -35,8 +35,43 @@ public class MainFrame extends JFrame {
 	}
 	
 	//패널을 전환하는 메서드
-    public void changePanel(String name) {
-        cardLayout.show(container, name);
-    }
+//    public void changePanel(String name) {
+//    	if (name.equals("End")) {
+//            EndPanel endPanel = new EndPanel(this);
+//            this.add(endPanel, "End");   // 새로 생성해서 등록
+//        }
+//
+//        cardLayout.show(container, name);
+//    }
+	
+	//패널을 전환하는 메서드 -> 동적 생성 및 제거 방식으로 
+	public void changePanel(String name) {
+	    // 기존 패널이 있다면 제거
+	    for (Component comp : container.getComponents()) {
+	        if ((name.equals("Start") && comp instanceof StartPanel) ||
+	            (name.equals("Game") && comp instanceof GamePanel) ||
+	            (name.equals("End") && comp instanceof EndPanel)) {
+	            container.remove(comp);
+	        }
+	    }
+
+	    // 새로 생성해서 등록
+	    if (name.equals("Start")) {
+	        StartPanel startPanel = new StartPanel(this);
+	        container.add(startPanel, "Start");
+	    } else if (name.equals("Game")) {
+	        GamePanel gamePanel = new GamePanel(this);
+	        container.add(gamePanel, "Game");
+	    } else if (name.equals("End")) {
+	        EndPanel endPanel = new EndPanel(this);
+	        container.add(endPanel, "End");
+	    }
+
+	    // 전환
+	    cardLayout.show(container, name);
+	    container.revalidate();
+	    container.repaint();
+	}
+
 
 }

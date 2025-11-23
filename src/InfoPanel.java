@@ -5,8 +5,10 @@ import java.awt.event.*;
 public class InfoPanel extends JPanel {
 	private JLabel scoreLabel;  // 현재 점수 표시
     private GameManager gm;     // 싱글톤
+    //private EndPanel endPanel;
 
     public InfoPanel(MainFrame mf) {
+    	//this.endPanel = endPanel;
 
         gm = GameManager.getInstance();
 
@@ -16,13 +18,13 @@ public class InfoPanel extends JPanel {
         // 점수 표시 라벨
         scoreLabel = new JLabel("Score: 0");
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        //scoreLabel.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
 
         // 시작 화면으로 돌아가기 버튼 
         JButton homeBtn = new JButton("홈으로");
         homeBtn.addActionListener(e -> {
         	//점수를 0으로 세팅하고 화면 전환
         	gm.setScoreZero();
+        	
             mf.changePanel("Start");
         });
 
@@ -31,7 +33,7 @@ public class InfoPanel extends JPanel {
         exitBtn.addActionListener(e -> System.exit(0));
         
         //테스트 버튼
-        JButton testBtn = new JButton("테스트");
+        JButton testBtn = new JButton("조기 종료");
         testBtn.addActionListener(e-> {
         	mf.changePanel("End");
         });
@@ -47,6 +49,11 @@ public class InfoPanel extends JPanel {
         // BorderLayout에 배치
         add(scoreLabel, BorderLayout.WEST);
         add(btnPanel, BorderLayout.EAST);
+    }
+    
+    //점수 업데이트 (나중에 필요 시 외부에서 호출)
+    public void updateScore() {
+        scoreLabel.setText("Score: " + gm.getScore());
     }
 
 }

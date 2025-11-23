@@ -20,7 +20,8 @@ public class EndPanel extends JPanel {
         title.setAlignmentX(CENTER_ALIGNMENT);
 
         // 점수 표시
-        scoreLabel = new JLabel("Score: 0");
+        scoreLabel = new JLabel("Score: " + gm.getScore());
+        
         scoreLabel.setFont(new Font("Arial", Font.PLAIN, 24));
         scoreLabel.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -66,4 +67,10 @@ public class EndPanel extends JPanel {
         add(Box.createVerticalStrut(40));
         add(btnPanel);                     // 버튼 묶음 중앙
     }
+    
+    //점수 갱신 메서드
+    public void updateScore() {
+        scoreLabel.setText("Score: " + gm.getScore());
+    }
+   
 }
