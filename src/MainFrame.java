@@ -34,16 +34,6 @@ public class MainFrame extends JFrame {
 		setVisible(true);
 	}
 	
-	//패널을 전환하는 메서드
-//    public void changePanel(String name) {
-//    	if (name.equals("End")) {
-//            EndPanel endPanel = new EndPanel(this);
-//            this.add(endPanel, "End");   // 새로 생성해서 등록
-//        }
-//
-//        cardLayout.show(container, name);
-//    }
-	
 	//패널을 전환하는 메서드 -> 동적 생성 및 제거 방식으로 
 	public void changePanel(String name) {
 	    // 기존 패널이 있다면 제거

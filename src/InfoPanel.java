@@ -8,7 +8,7 @@ public class InfoPanel extends JPanel {
 	
 	private Timer timer;
 	private JLabel timeLabel; // 남은 시간 표시
-	private int timeLeft = 200; //제한시간 (30초)
+	private int timeLeft = 60; //제한시간 (60초)
 	
     private GameManager gm;     // 게임매니저 선언
     //private EndPanel endPanel;
@@ -26,7 +26,7 @@ public class InfoPanel extends JPanel {
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 18));
         
         //남은 시간 표시 라벨
-        timeLabel = new JLabel("  timeleft: 200");
+        timeLabel = new JLabel("  timeleft: 60");
         timeLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
         // 시작 화면으로 돌아가기 버튼 

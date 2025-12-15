@@ -47,15 +47,5 @@ public class GameManager {
     public int[][] getMap() {
         return map;
     }
-    
-    //맵 데이터 수정 함수
-    public void modifyMap() {
-    	
-    }
-    
-    //맵을 리셋하는 메서드
-    public void resetMap() {
-    	//setMap();
-    }
 	
 }

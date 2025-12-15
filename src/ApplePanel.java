@@ -7,19 +7,22 @@ public class ApplePanel extends JPanel {
 	GameManager gm = GameManager.getInstance();
 	private JLabel[][] labels; // 각 셀을 JLabel로 관리
 	private ArrayList<Point> selectedCells = new ArrayList<>();
-	private InfoPanel infoPanel; // InfoPanel 참조 -> 인포패널의 점수 란 업데이트를 위함
+	private InfoPanel infoPanel; // InfoPanel 인스턴스 -> 인포패널의 점수 란 업데이트를 위함
 	//private EndPanel endPanel;
 	
 	public ApplePanel(InfoPanel infoPanel) {
 		this.infoPanel = infoPanel;
 	    //this.endPanel = endPanel;
 		
+		//GridLayout과 labels의 행열 크기
 		int rows = 17;
         int cols = 10;
+        
 		setLayout(new GridLayout(rows, cols, 2, 2));
 		
 		// 맵 초기화
         gm.setMap();
+        
 		//JLabel 배열 초기화
 		setLabels();
 		
@@ -30,11 +33,12 @@ public class ApplePanel extends JPanel {
 		int[][] _map = gm.getMap(); //현재 맵 상태를 불러옴
 	    int rows = _map.length;
 	    int cols = _map[0].length;
-	    labels = new JLabel[rows][cols];
+	    labels = new JLabel[rows][cols]; //숫자 박스 2차원 배열. 맵 데이터와 대응되도록 설계
 
 	    for (int r = 0; r < rows; r++) {
 	        for (int c = 0; c < cols; c++) {
-	            JLabel label = new JLabel();
+	        	
+	            JLabel label = new JLabel(); //JLabel 생성
 	            label.setHorizontalAlignment(JLabel.CENTER);
 	            label.setVerticalAlignment(JLabel.CENTER);
 	            label.setOpaque(true); // 배경색 표시 가능하게
@@ -62,8 +66,8 @@ public class ApplePanel extends JPanel {
 	                }
 	            });
 
-	            labels[r][c] = label;
-	            add(label);
+	            labels[r][c] = label; //세팅이 완료된 JLabel을 앞서 정의한 JLabel 2차원 배열에 추가.
+	            add(label); //JPanel(GridLayout)에 라벨 추가
 	        }
 	    }
 	}
@@ -95,8 +99,7 @@ public class ApplePanel extends JPanel {
 	        int end = Math.max(a.x, r);
 
 	        for (int x = start; x < end; x++) {
-	            if (_map[x][c] != 0 &&
-	                !selectedCells.contains(new Point(x, c))) {
+	            if (_map[x][c] != 0 && !selectedCells.contains(new Point(x, c))) {
 	                return false;
 	            }
 	        }
@@ -112,7 +115,7 @@ public class ApplePanel extends JPanel {
 	    int value = gm.getMap()[r][c]; //정수 맵에서 해당하는 값을 가지고 옮
 	    if (value == 0) return; // 빈 칸 무시
 
-	    Point p = new Point(r, c);
+	    Point p = new Point(r, c); //selectedCells의 원소와 비교하기 위함
 
 	    // 이미 선택된 셀이면 선택 해제
 	    if (selectedCells.contains(p)) {
@@ -131,7 +134,7 @@ public class ApplePanel extends JPanel {
 	        return;
 	    }
 
-	    //지금까지 선택된 셀 중 하나라도 인접하면 선택 가능
+	    //선택 가능한지 아닌지를 판단하는 boolean 지역변수
 	    boolean selectable = false;
 
 	    for (Point s : selectedCells) {
@@ -146,9 +149,9 @@ public class ApplePanel extends JPanel {
 //	        }
 	    }
 
-	    if (!selectable) return; // 인접한 셀이 없다면 선택 불가
+	    if (!selectable) return; //선택 불가하다면 메서드 종료
 
-	    // 인접 → 선택
+	    // selectable==true → 선택
 	    selectedCells.add(p);
 	    labels[r][c].setBackground(Color.YELLOW);
 
@@ -194,10 +197,5 @@ public class ApplePanel extends JPanel {
 	        repaint(); //컴포넌트의 변화를 알려주고, 강제로 페인팅할 것을 지시
 	    }
 	}
-	
-	// 필요하면 InfoPanel에 접근
-    public InfoPanel getInfoPanel() {
-        return infoPanel;
-    }
 
 }
