@@ -7,7 +7,7 @@ public class StartPanel extends JPanel {
 	public StartPanel(MainFrame mf) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        JLabel title = new JLabel("APPLE BOX");
+        JLabel title = new JLabel("NUMBER BOX");
         title.setFont(new Font("Arial", Font.BOLD, 32));
         title.setAlignmentX(CENTER_ALIGNMENT);
 
