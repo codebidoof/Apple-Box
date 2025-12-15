@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class ApplePanel extends JPanel {
 	GameManager gm = GameManager.getInstance();
-	//private int[][] _map; 
 	private JLabel[][] labels; // 각 셀을 JLabel로 관리
 	private ArrayList<Point> selectedCells = new ArrayList<>();
 	private InfoPanel infoPanel; // InfoPanel 참조 -> 인포패널의 점수 란 업데이트를 위함
@@ -43,8 +42,8 @@ public class ApplePanel extends JPanel {
 	            int value = _map[r][c];
 	            if (value != 0) {
 	                label.setText(String.valueOf(value)); // 숫자 표시
-	                label.setBackground(Color.GREEN);    // 배경색 
-	                label.setForeground(Color.BLACK);
+	                label.setBackground(Color.GREEN);  // 배경색 
+	                label.setForeground(Color.BLACK); //글자색
 	            } else { //정수 배열 값이 0일 경우
 	                label.setText(""); // 빈 칸
 	                label.setBackground(Color.WHITE);
@@ -59,7 +58,7 @@ public class ApplePanel extends JPanel {
 	            label.addMouseListener(new MouseAdapter() {
 	                @Override
 	                public void mouseClicked(MouseEvent e) {
-	                    onCellClicked(fr, fc);
+	                    whenClicked(fr, fc);
 	                }
 	            });
 
@@ -68,9 +67,48 @@ public class ApplePanel extends JPanel {
 	        }
 	    }
 	}
+
 	
-	//클릭했을 때 라벨을 선택하는 함수
-	private void onCellClicked(int r, int c) {
+	//선택 가능한지 체크하는 메서드
+	private boolean isSelecteable(Point a, int r, int c) { //a는 이미 선택된 셀, (r, c)는 선택을 시도하는 셀의 (열, 행)
+		int[][] _map = gm.getMap();
+		
+		//같은 행
+		if (a.x == r) {
+			//선택상태인 셀들과 떨어져 있는 셀을 선택하고 싶을 때 그 사이구간을 탐색하기 위하여 범위 설정    
+	        int start = Math.min(a.y, c) + 1;
+	        int end = Math.max(a.y, c);
+
+	        //사이구간을 탐색
+	        for (int y = start; y < end; y++) {
+	            // 0이 아니고, 선택도 안 된 숫자면 벽으로 간주
+	            if (_map[r][y] != 0 && !selectedCells.contains(new Point(r, y))) {
+	                return false;
+	            }
+	        }
+	        return true;
+	    }
+		
+		//같은 열
+		if (a.y == c) {
+	        int start = Math.min(a.x, r) + 1;
+	        int end = Math.max(a.x, r);
+
+	        for (int x = start; x < end; x++) {
+	            if (_map[x][c] != 0 &&
+	                !selectedCells.contains(new Point(x, c))) {
+	                return false;
+	            }
+	        }
+	        return true;
+	    }
+		
+		//두 분기를 다 통과 못하면 선택 불가능
+		return false;
+	}
+	
+	//클릭했을 때 라벨을 선택하는 메서드
+	private void whenClicked(int r, int c) {
 	    int value = gm.getMap()[r][c]; //정수 맵에서 해당하는 값을 가지고 옮
 	    if (value == 0) return; // 빈 칸 무시
 
@@ -80,6 +118,9 @@ public class ApplePanel extends JPanel {
 	    if (selectedCells.contains(p)) {
 	        selectedCells.remove(p);
 	        labels[r][c].setBackground(Color.GREEN);
+	        
+	        checkAndRemove(); //선택을 해제했을 때 조건이 만족될 수도 있으니까 호출
+	        
 	        return;
 	    }
 
@@ -91,23 +132,27 @@ public class ApplePanel extends JPanel {
 	    }
 
 	    //지금까지 선택된 셀 중 하나라도 인접하면 선택 가능
-	    boolean adjacent = false;
+	    boolean selectable = false;
 
 	    for (Point s : selectedCells) {
-	        int dist = Math.abs(s.x - r) + Math.abs(s.y - c);
-	        if (dist == 1) {
-	            adjacent = true;
-	            break;
-	        }
+	        //int dist = Math.abs(s.x - r) + Math.abs(s.y - c);
+	    	if (isSelecteable(s, r, c)) {
+	    		selectable = true;
+	    		break;
+	    	}
+//	        if (dist == 1) {
+//	            selectable = true;
+//	            break;
+//	        }
 	    }
 
-	    if (!adjacent) return; // 인접한 셀이 없다면 선택 불가
+	    if (!selectable) return; // 인접한 셀이 없다면 선택 불가
 
 	    // 인접 → 선택
 	    selectedCells.add(p);
 	    labels[r][c].setBackground(Color.YELLOW);
 
-	    checkAndRemove();
+	    checkAndRemove(); //조건 만족 체크 후 삭제 
 	}
 	
 	//선택된 셀의 합이 10이면 제거하는 함수
