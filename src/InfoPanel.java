@@ -6,7 +6,7 @@ import javax.swing.Timer;
 public class InfoPanel extends JPanel {
 	private JLabel scoreLabel;  // 현재 점수 표시
 	
-	private Timer timer;
+	private Timer timer; //타이머 인스턴스 선언
 	private JLabel timeLabel; // 남은 시간 표시
 	private int timeLeft = 60; //제한시간 (60초)
 	

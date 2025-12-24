@@ -5,20 +5,17 @@ import java.util.ArrayList;
 
 public class ApplePanel extends JPanel {
 	GameManager gm = GameManager.getInstance();
-	private JLabel[][] labels; // 각 셀을 JLabel로 관리
-	private ArrayList<Point> selectedCells = new ArrayList<>();
+	
+	private JLabel[][] labels; // 각 숫자 박스를 2차원 배열로 관리
+	private ArrayList<Point> selectedCells = new ArrayList<>(); //선택된 숫자박스의 좌표를 관리할 ArrayList. x는 행좌표, y는 열좌표임
 	private InfoPanel infoPanel; // InfoPanel 인스턴스 -> 인포패널의 점수 란 업데이트를 위함
 	//private EndPanel endPanel;
 	
-	public ApplePanel(InfoPanel infoPanel) {
+	public ApplePanel(InfoPanel infoPanel) { //인포패널에 있는 점수 업데이트를 위해 생성자로 인포패널 인스턴스를 넣음
 		this.infoPanel = infoPanel;
 	    //this.endPanel = endPanel;
-		
-		//GridLayout과 labels의 행열 크기
-		int rows = 17;
-        int cols = 10;
         
-		setLayout(new GridLayout(rows, cols, 2, 2));
+		setLayout(new GridLayout(17, 10, 2, 2));
 		
 		// 맵 초기화
         gm.setMap();
@@ -74,15 +71,19 @@ public class ApplePanel extends JPanel {
 
 	
 	//선택 가능한지 체크하는 메서드
-	private boolean isSelecteable(Point a, int r, int c) { //a는 이미 선택된 셀, (r, c)는 선택을 시도하는 셀의 (열, 행)
+	private boolean isSelecteable(Point p, int r, int c) { // p는 이미 선택된 박스, (r, c)는 선택을 시도하는 박스의 (행, 열)
 		int[][] _map = gm.getMap();
 		
-		//같은 행
-		if (a.x == r) {
+		//선택된 박스와 선택을 시도하는 박스가 같은 행
+		if (p.x == r) {
 			//선택상태인 셀들과 떨어져 있는 셀을 선택하고 싶을 때 그 사이구간을 탐색하기 위하여 범위 설정    
-	        int start = Math.min(a.y, c) + 1;
-	        int end = Math.max(a.y, c);
-
+	        int start = Math.min(p.y, c) + 1;
+	        int end = Math.max(p.y, c);
+	        
+	        //디버깅
+//	        System.out.println("검사 시작 열 좌표" + start);
+//	        System.out.println("검사 종료 열 좌표" + end + "\n");
+	        
 	        //사이구간을 탐색
 	        for (int y = start; y < end; y++) {
 	            // 0이 아니고, 선택도 안 된 숫자면 벽으로 간주
@@ -93,10 +94,13 @@ public class ApplePanel extends JPanel {
 	        return true;
 	    }
 		
-		//같은 열
-		if (a.y == c) {
-	        int start = Math.min(a.x, r) + 1;
-	        int end = Math.max(a.x, r);
+		//선택된 박스와 선택을 시도하는 박스가 같은 열
+		if (p.y == c) {
+	        int start = Math.min(p.x, r) + 1;
+	        int end = Math.max(p.x, r);
+	        
+	        //디버깅
+	        //System.out.println("검사 시작 행 좌표" + start);
 
 	        for (int x = start; x < end; x++) {
 	            if (_map[x][c] != 0 && !selectedCells.contains(new Point(x, c))) {
@@ -117,13 +121,22 @@ public class ApplePanel extends JPanel {
 
 	    Point p = new Point(r, c); //selectedCells의 원소와 비교하기 위함
 
-	    // 이미 선택된 셀이면 선택 해제
+	    // 클릭한 박스가 이미 선택된 박스이면 그 박스는 선택 해제 -> 폐기
+//	    if (selectedCells.contains(p)) {
+//	        selectedCells.remove(p);
+//	        labels[r][c].setBackground(Color.GREEN);
+//	        
+//	        checkAndRemove(); //선택을 해제했을 때 조건이 만족될 수도 있으니까 호출
+//	        
+//	        return;
+//	    }
+	    
+	    // 클릭한 박스가 이미 선택된 박스면 → 전체 선택 해제
 	    if (selectedCells.contains(p)) {
-	        selectedCells.remove(p);
-	        labels[r][c].setBackground(Color.GREEN);
-	        
-	        checkAndRemove(); //선택을 해제했을 때 조건이 만족될 수도 있으니까 호출
-	        
+	        for (Point selectedbox : selectedCells) {
+	            labels[selectedbox.x][selectedbox.y].setBackground(Color.GREEN);
+	        }
+	        selectedCells.clear();
 	        return;
 	    }
 
@@ -138,10 +151,12 @@ public class ApplePanel extends JPanel {
 	    boolean selectable = false;
 
 	    for (Point s : selectedCells) {
+	    	System.out.println("검사 시작!");
+	    	//System.out.println("현재 검사 중인 선택 셀: " + s);
 	        //int dist = Math.abs(s.x - r) + Math.abs(s.y - c);
 	    	if (isSelecteable(s, r, c)) {
 	    		selectable = true;
-	    		break;
+	    		break; //selectable = true가 되는 순간 바로 break
 	    	}
 //	        if (dist == 1) {
 //	            selectable = true;
@@ -177,7 +192,7 @@ public class ApplePanel extends JPanel {
 	        
 	        //사라질 셀 개수만큼 점수 증가
 	        gm.addScore(selectedCells.size());
-	        System.out.println(gm.getScore()); //점수 출력. 디버깅용
+	        //System.out.println(gm.getScore()); //점수 출력. 디버깅용
 
 	        selectedCells.clear();
 	        
@@ -186,9 +201,6 @@ public class ApplePanel extends JPanel {
                 infoPanel.updateScore();
             }
             
-//            if (endPanel != null) {
-//            	endPanel.updateScore();
-//            }
 
 	        // UI 업데이트
 	        removeAll(); //모든 JLabel을 제거

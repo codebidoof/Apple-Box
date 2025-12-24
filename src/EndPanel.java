@@ -65,12 +65,8 @@ public class EndPanel extends JPanel {
         add(Box.createVerticalStrut(20));
         add(scoreLabel);
         add(Box.createVerticalStrut(40));
-        add(btnPanel);                     // 버튼 묶음 중앙
+        add(btnPanel); // 버튼 패널 붙이기
     }
     
-    //점수 갱신 메서드
-    public void updateScore() {
-        scoreLabel.setText("Score: " + gm.getScore());
-    }
    
 }

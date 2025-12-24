@@ -17,11 +17,11 @@ public class StartPanel extends JPanel {
         JButton exitBtn = new JButton("게임 종료");
         exitBtn.setAlignmentX(CENTER_ALIGNMENT);
 
-        add(Box.createVerticalStrut(100));
+        add(Box.createVerticalStrut(100)); //간격
         add(title);
-        add(Box.createVerticalStrut(50));
+        add(Box.createVerticalStrut(50)); //간격
         add(startBtn);
-        add(Box.createVerticalStrut(20));
+        add(Box.createVerticalStrut(20)); //간격
         add(exitBtn);
 
         // 시작 버튼

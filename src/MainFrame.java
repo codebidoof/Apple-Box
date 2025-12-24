@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
 		add(endPanel, "End");
 		
 		//처음엔 시작 화면이 보이게
-		cardLayout.show(getContentPane(), "Start");
+		cardLayout.show(container, "Start");
 		
 		setLocationRelativeTo(null); //모니터 중앙에 오도록
 		setVisible(true);
